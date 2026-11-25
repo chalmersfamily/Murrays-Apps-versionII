@@ -1,0 +1,51 @@
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: #eef2f4; color: #142a3a; font: 1rem/1.5 system-ui, sans-serif; }
+.inner { width: min(1150px, calc(100% - 2rem)); margin-inline: auto; }
+header { background: #142a3a; color: #fff; padding: clamp(2rem, 6vw, 4rem) 0 2rem; border-bottom: 5px solid #57b5a9; }
+h1 { margin: 0 0 1.4rem; font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.07; letter-spacing: -.045em; }
+header label { display: block; margin-bottom: .35rem; }
+input { width: min(100%, 28rem); border: 1px solid #adc7cb; border-radius: .65rem; padding: .7rem .9rem; background: #fff; color: #142a3a; font: inherit; }
+main { padding-block: 1.7rem 3rem; }
+section + section { margin-top: 2rem; }
+h2 { margin: 0 0 .7rem; font-size: 1.25rem; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: .75rem; padding: 0; margin: 0; }
+.tile { position: relative; display: flex; gap: .8rem; background: #fff; border: 1px solid #cbd9dd; border-radius: .8rem; min-height: 5.2rem; padding: .85rem; }
+.tile:has(.app:hover) { border-color: #43897e; background: #f7fcfb; }
+.tile a { color: #154e61; }
+.app { font-weight: 720; text-decoration: none; }
+.app::after { content: ''; position: absolute; inset: 0; border-radius: .8rem; }
+.tile p { margin: .12rem 0 0; font-size: .91rem; color: #465e69; }
+.secondary { position: relative; display: inline-block; margin-top: .35rem; font-size: .92rem; }
+:focus-visible { outline: 3px solid #b06b1e; outline-offset: 3px; }
+
+
+.tile-icon { display: block; flex: 0 0 auto; object-fit: contain; border-radius: .6rem; }
+.brand-footer { padding-block: 1rem 2rem; border-top: 1px solid #cbd9dd; color: #18222B; text-align: center; font-size: .875rem; }
+.brand-footer p { margin: 0; }
+
+.app-actions { padding-top: 1rem; }
+.app-actions p:empty, .form-error:empty { display: none; }
+.app-actions button, dialog button {
+  min-height: 44px;
+  margin: .2rem .25rem .2rem 0;
+  padding: .55rem .85rem;
+  border: 1px solid #154e61;
+  border-radius: .55rem;
+  background: #154e61;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+dialog {
+  width: min(28rem, calc(100% - 2rem));
+  padding: 1.25rem;
+  border: 1px solid #cbd9dd;
+  border-radius: .8rem;
+  color: #142a3a;
+}
+dialog::backdrop { background: rgb(20 42 58 / 60%); }
+dialog label { display: block; margin-bottom: .7rem; }
+dialog input { display: block; width: 100%; margin-top: .2rem; }
+.form-error { color: #9b2525; }
+#custom-apps .app { overflow-wrap: anywhere; }

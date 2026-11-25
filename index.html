@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142a3a">
+  <title>Murray’s Launcher</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon-192.png">
+  <script defer src="./launcher.js"></script>
+</head>
+<body>
+  <header><div class="inner"><h1>Murray’s Launcher</h1><label for="search">Find an app</label><input id="search" type="search" placeholder="Search apps" autocomplete="off"></div></header>
+  <div class="inner app-actions">
+    <button id="add-app" type="button">Add an app</button>
+    <button id="app-sync" type="button">Set up app sync</button>
+    <p id="sync-status" role="status"></p>
+  </div>
+  <dialog id="sync-dialog" aria-labelledby="sync-title">
+    <form id="sync-form">
+      <h2 id="sync-title">App sync</h2>
+      <p>Use the same sync URL and pairing key on your laptop and phone.</p>
+      <label>Sync URL <input name="endpoint" type="url" required placeholder="https://…"></label>
+      <label>Pairing key <input name="key" type="password" required pattern="[A-Fa-f0-9]{64}" autocomplete="off"></label>
+      <p class="form-error" role="alert"></p>
+      <button type="submit">Connect</button>
+      <button type="button" data-close>Cancel</button>
+    </form>
+  </dialog>
+  <dialog id="add-dialog" aria-labelledby="add-title">
+    <form id="add-form">
+      <h2 id="add-title">Add an app</h2>
+      <label>App name <input name="title" required maxlength="80"></label>
+      <label>App link <input name="url" type="url" required maxlength="2048" placeholder="https://…"></label>
+      <p class="form-error" role="alert"></p>
+      <button type="submit">Save app</button>
+      <button type="button" data-close>Cancel</button>
+    </form>
+  </dialog>
+  <main class="inner">
+    <p id="empty" role="status" hidden>No matching apps.</p>
+    <section aria-labelledby="group-0">
+      <h2 id="group-0">Projects &amp; ideas</h2>
+      <ul class="tiles">
+        <li class="tile"><img class="tile-icon" src="./icons/idea-garden.png" width="40" height="40" alt=""><div><a class="app" href="https://idea-garden-test.pages.dev/">Idea Garden</a><p>Capture and develop ideas</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/project-tracker.png" width="40" height="40" alt=""><div><a class="app" href="https://mask-projecttrack.pages.dev/">Project Tracker</a><p>Projects and next actions</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/job-jar.png" width="40" height="40" alt=""><div><a class="app" href="https://job-jar.navybetta5.chatgpt.site/">Job Jar</a><p>Shared jobs</p></div></li>
+      </ul>
+    </section>
+    <section aria-labelledby="group-1">
+      <h2 id="group-1">Outdoors &amp; fitness</h2>
+      <ul class="tiles">
+        <li class="tile"><img class="tile-icon" src="./icons/oc-performance.png" width="40" height="40" alt=""><div><a class="app" href="https://oc6-performance-dev.pages.dev/?utm_source=chatgpt.com">OC6 Performance</a><p>Crews and paddling sessions</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/paddletrack-web.png" width="40" height="40" alt=""><div><a class="app" href="https://paddletrack-web.chalmersfamily.workers.dev/">PaddleTrack Web</a><p>Paddling log</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/paddletrack-web.png" width="40" height="40" alt=""><div><a class="app" href="intent://home#Intent;scheme=paddletrack;package=com.paddletrack.app;end">PaddleTrack Android</a><p>Open installed app on Android</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/winterfit.png" width="40" height="40" alt=""><div><a class="app" href="https://winter-fit.navybetta5.chatgpt.site/">Winter Fit</a><p>Winter fitness</p><a class="secondary" href="intent://open#Intent;scheme=winterfit;package=com.maskmanagement.winterfit;end">Open Android app</a></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/ski-track.png" width="40" height="40" alt=""><div><a class="app" href="intent://home#Intent;scheme=skipasstracker;package=com.skitracker.widget;end">Ski Track</a><p>Open installed app on Android</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/whoop-remy-walk.png" width="40" height="40" alt=""><div><a class="app" href="https://remy-walktrack-web.chalmersfamily.workers.dev/">Whoop Remy Walk</a><p>Web: View your walk summary.<br>Android app: Record and update walks.</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/boat-inventory.png" width="40" height="40" alt=""><div><a class="app" href="https://boat-inventory.achalmer1.chatgpt.site/">Boat Inventory</a><p>Kelowna Paddle Centre boats</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/boat-inventory-demo.png" width="40" height="40" alt=""><div><a class="app" href="https://kpc-boat-demo.achalmer1.chatgpt.site/">Boat Inventory Demo</a><p>Demo inventory</p></div></li>
+      </ul>
+    </section>
+    <section aria-labelledby="group-2">
+      <h2 id="group-2">Home &amp; interests</h2>
+      <ul class="tiles">
+        <li class="tile"><img class="tile-icon" src="./icons/books-i-read.png" width="40" height="40" alt=""><div><a class="app" href="https://my-reading-library.chalmersfamily.workers.dev/">Books I Read</a><p>Reading library</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/coffee-talk.svg" width="40" height="40" alt=""><div><a class="app" href="https://cafe-quest.chalmersfamily.workers.dev/">Coffee Talk</a><p>Coffee journal</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/biteatlas.png" width="40" height="40" alt=""><div><a class="app" href="https://biteatlas-chalmers.netlify.app/">BiteAtlas</a><p>Food and places</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/family-recipe.png" width="40" height="40" alt=""><div><a class="app" href="https://ourrecipeboxv2302026-09-25source.vercel.app/">Family Recipe</a><p>Family recipe box</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/xmas-list.png" width="40" height="40" alt=""><div><a class="app" href="https://proud-dawn-2c4d.chalmersfamily.workers.dev/?utm_source=chatgpt.com">XMAS List</a><p>Family wish lists</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/game-day-grey-cup.png" width="40" height="40" alt=""><div><a class="app" href="https://gameday-picks-private-test.navybetta5.chatgpt.site/">Game Day / Grey Cup</a><p>Picks and games</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/pool-stock.png" width="40" height="40" alt=""><div><a class="app" href="https://poolstockv23startupfix2026-09-25-murray4.vercel.app/?refresh=260">Pool Stock</a><p>Pool tracking</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/plants-in-our-yard.png" width="40" height="40" alt=""><div><strong>Plants in our Yard</strong><p>Installed Android app · installer in OneDrive under Plants in our yard</p></div></li>
+      </ul>
+    </section>
+    <section aria-labelledby="group-3">
+      <h2 id="group-3">Firm selection</h2>
+      <ul class="tiles">
+        <li class="tile"><img class="tile-icon" src="./icons/pick-the-firm.png" width="40" height="40" alt=""><div><a class="app" href="https://firm-ranking-avery-2026.achalmer1.chatgpt.site/">My Firm Ranking</a><p>Avery’s rankings</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icons/pick-the-firm.png" width="40" height="40" alt=""><div><a class="app" href="https://pick-the-firm-avery.navybetta5.chatgpt.site/">Pick the Firm</a><p>Firm comparison</p></div></li>
+      </ul>
+    </section>
+    <section id="custom-apps" aria-labelledby="custom-title" hidden>
+      <h2 id="custom-title">Added apps</h2>
+      <ul class="tiles"></ul>
+    </section>
+    <section aria-labelledby="retired-apps">
+      <h2 id="retired-apps">Retired apps</h2>
+      <ul class="tiles">
+        <li class="tile"><img class="tile-icon" src="./icons/file-follow-up.png" width="40" height="40" alt=""><div><strong>File &amp; Follow Up</strong><p>OneDrive filing and follow-up tasks</p></div></li>
+        <li class="tile"><img class="tile-icon" src="./icon-192.png" width="40" height="40" alt=""><div><a class="app" href="https://daily-planner-launchpad.mgchalmers.chatgpt.site/">Old Murrays app Launcher</a></div></li>
+      </ul>
+    </section>
+  </main>
+  <footer class="brand-footer inner">
+    <p>© 2026 MASK Management Ltd.<br>All Rights Reserved.</p>
+    <p id="version"></p>
+  </footer>
+</body>
+</html>
