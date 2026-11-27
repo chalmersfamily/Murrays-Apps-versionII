@@ -1,4 +1,4 @@
-const name = 'murrays-launcher-v8';
+const name = 'murrays-launcher-v9';
 const assets = ['./', './index.html', './styles.css', './launcher.js', './manifest.webmanifest', './icon-192.png', './icon-512.png',
   "./icons/biteatlas.png",
   "./icons/boat-inventory-demo.png",

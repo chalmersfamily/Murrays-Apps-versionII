@@ -1,4 +1,4 @@
-const VERSION = '1.2.0';
+const VERSION = '1.2.1';
 const SYNC_STORAGE = 'murrays-app-launcher-sync';
 const search = document.querySelector('#search');
 const sections = [...document.querySelectorAll('main section')];

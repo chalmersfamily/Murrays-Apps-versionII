@@ -51,6 +51,8 @@ dialog input { display: block; width: 100%; margin-top: .2rem; }
 #custom-apps .app { overflow-wrap: anywhere; }
 
 .tile .edit-link {
+  position: relative;
+  z-index: 1;
   align-self: flex-start;
   margin-inline-start: auto;
   flex-shrink: 0;
