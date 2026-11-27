@@ -1,9 +1,14 @@
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const SYNC_STORAGE = 'murrays-app-launcher-sync';
 const search = document.querySelector('#search');
 const sections = [...document.querySelectorAll('main section')];
 const customApps = document.querySelector('#custom-apps .tiles');
 const syncDialog = document.querySelector('#sync-dialog');
+const editDialog = document.querySelector('#edit-dialog');
+const editForm = document.querySelector('#edit-form');
+const builtInLinks = new Map([...document.querySelectorAll('[data-app-id]')]
+  .map(link => ['built-in:' + link.dataset.appId, { link, originalUrl: link.href }]));
+let editingAppId = null;
 const addDialog = document.querySelector('#add-dialog');
 const syncForm = document.querySelector('#sync-form');
 const addForm = document.querySelector('#add-form');
@@ -20,7 +25,8 @@ function filterApps() {
   for (const section of sections) {
     const tiles = [...section.querySelectorAll('.tile')];
     for (const tile of tiles) {
-      const text = tile.textContent.toLocaleLowerCase();
+      const text = [...tile.childNodes].filter(node => node.nodeName !== 'BUTTON')
+        .map(node => node.textContent).join(' ').toLocaleLowerCase();
       tile.hidden = !words.every(word => text.includes(word));
     }
     section.hidden = tiles.every(tile => tile.hidden);
@@ -28,9 +34,37 @@ function filterApps() {
   document.querySelector('#empty').hidden = !sections.every(section => section.hidden);
 }
 
+function addEditButton(link, id) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'edit-link';
+  button.textContent = 'Edit link';
+  button.setAttribute('aria-label', 'Edit link for ' + link.textContent);
+  button.addEventListener('click', () => {
+    if (!connection) {
+      showSync();
+      return;
+    }
+    editingAppId = id;
+    editForm.elements.url.value = link.href;
+    editForm.querySelector('.form-error').textContent = '';
+    document.querySelector('#edit-title').textContent = 'Edit link for ' + link.textContent;
+    editDialog.showModal();
+  });
+  link.closest('.tile').append(button);
+}
+
+for (const [id, { link }] of builtInLinks) addEditButton(link, id);
+
 function renderApps(apps) {
+  const overrides = new Map(apps.filter(app => app.id.startsWith('built-in:'))
+    .map(app => [app.id, app.url]));
+  for (const [id, { link, originalUrl }] of builtInLinks) {
+    link.href = overrides.get(id) || originalUrl;
+  }
   const tiles = [];
   for (const app of apps) {
+    if (app.id.startsWith('built-in:')) continue;
     const url = new URL(app.url);
     if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) continue;
     const tile = document.createElement('li');
@@ -40,15 +74,16 @@ function renderApps(apps) {
     link.href = url.href;
     link.textContent = app.title;
     tile.append(link);
+    addEditButton(link, app.id);
     tiles.push(tile);
   }
   customApps.replaceChildren(...tiles);
   filterApps();
 }
 
-async function syncApps(config, app) {
-  const response = await fetch(new URL('/apps', config.endpoint), {
-    method: app ? 'POST' : 'GET',
+async function syncApps(config, app, method = app ? 'POST' : 'GET') {
+  const response = await fetch(new URL('/apps?include=overrides', config.endpoint), {
+    method,
     headers: { Authorization: 'Bearer ' + config.key, 'Content-Type': 'application/json' },
     body: app ? JSON.stringify(app) : undefined,
     redirect: 'error',
@@ -56,6 +91,8 @@ async function syncApps(config, app) {
     signal: AbortSignal.timeout(12000),
   });
   if (response.status === 401) throw new Error('Check your pairing key.');
+  if (method === 'PATCH' && response.status === 405) throw new Error('Update the app sync Worker to enable link editing.');
+  if (method === 'PATCH' && response.status === 404) throw new Error('This app could not be found. Refresh the launcher and try again.');
   if (response.status === 409) throw new Error('That app link already exists.');
   if (!response.ok) throw new Error('App sync is unavailable. Check your connection and try again.');
   const apps = await response.json();
@@ -146,6 +183,19 @@ bindSubmit(addForm, async fields => {
   addDialog.close();
 });
 
+bindSubmit(editForm, async fields => {
+  const url = new URL(fields.url.value.trim());
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.href.length > 2048) {
+    throw new Error('Enter a valid web link.');
+  }
+  ++requestNumber;
+  const apps = await syncApps(connection, { id: editingAppId, url: url.href }, 'PATCH');
+  ++requestNumber;
+  renderApps(apps);
+  status.textContent = 'Link saved.';
+  editDialog.close();
+});
+
 search.addEventListener('input', filterApps);
 syncButton.addEventListener('click', showSync);
 document.querySelector('#add-app').addEventListener('click', () => {
@@ -168,3 +218,4 @@ try {
 if (connection) syncButton.textContent = 'App sync settings';
 refreshApps();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(console.warn);
+

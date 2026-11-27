@@ -1,4 +1,4 @@
-const name = 'murrays-launcher-v7';
+const name = 'murrays-launcher-v8';
 const assets = ['./', './index.html', './styles.css', './launcher.js', './manifest.webmanifest', './icon-192.png', './icon-512.png',
   "./icons/biteatlas.png",
   "./icons/boat-inventory-demo.png",
@@ -35,4 +35,5 @@ self.addEventListener('fetch', event => {
   event.respondWith(fetch(event.request).catch(() => caches.open(name)
     .then(cache => cache.match(event.request))));
 });
+
 
